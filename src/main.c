@@ -1,6 +1,14 @@
 #include "../basket/basket.h"
 
+#include <stdlib.h>
+
 static int init(void *userdata) {
+    const char *package = getenv("BASKET_TEMPLATE_PACKAGE");
+
+    // Please refeer to basket/documentation/filesystem.md
+    if (fs_init(package))
+        err_fatal("Filesystem", "Couldn't access filesystem!");
+
     u32 size;
     char *mem = fs_read("tex_atlas.png", &size);
 

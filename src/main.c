@@ -1,16 +1,13 @@
+#define BASKET_PLATFORM
 #include "../basket/basket.h"
 
-#include <stdlib.h>
-
 static int init(void *userdata) {
-    const char *package = getenv("BASKET_TEMPLATE_PACKAGE");
-
     // Please refeer to basket/documentation/filesystem.md
-    if (fs_init(package))
+    if (pak_mount("package/"))
         err_fatal("Filesystem", "Couldn't access filesystem!");
 
-    u32 size;
-    char *mem = fs_read("tex_atlas.png", &size);
+    size_t size;
+    char *mem = pak_read("tex_atlas.png", &size);
 
     if (mem == 0)
         err_fatal("App", "Can't load atlas texture!");

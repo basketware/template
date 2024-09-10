@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := build
+
 NAME = template
 RDNN = io.github.basketware.$(NAME)
 
@@ -22,7 +24,6 @@ endif
 SOURCES := $(wildcard src/*.c)
 OBJECTS := $(patsubst src/%.c,$(OUT)/%.o,$(SOURCES))
 
-all: build
 build: build-basket $(OUTPUT)
 
 mingw64:
@@ -39,20 +40,16 @@ run: build
 PREFIX ?= /usr
 SHARE = $(PREFIX)/share/$(RDNN)
 
-install: build compress
+install: build
 	# ONLY VALID FOR LINUX!
-	# EXISTS SOLELY BECAUSE OF FLATPAK-BUILDER
+
 	@mkdir -p $(PREFIX)/bin
 	@mkdir -p $(SHARE)/
-	@install -D $(GAME) $(SHARE)/game
-	@install -D out/package.bsk $(SHARE)/package.bsk
+	@install -D $(OUTPUT) $(SHARE)/game
 	@ln -s $(SHARE)/game $(PREFIX)/bin/$(RDNN)
 
 	@install -D platform/game.desktop $(PREFIX)/share/applications/$(RDNN).desktop
 	@install -D platform/game.svg $(PREFIX)/share/icons/$(RDNN).svg
-
-compress:
-	@cd package; zip ../out/package.bsk -9 *
 
 $(OUTPUT): $(OBJECTS)
 	$(CC) $(OBJECTS) -o $@ $(CFLAGS) $(LDFLAGS)
